@@ -9,6 +9,12 @@
 			"path": "/compute/metadata"
 		},
 		{
+			"importpath": "github.com/StabbyCutyou/buffstreams",
+			"repository": "https://github.com/StabbyCutyou/buffstreams",
+			"revision": "20679e9ca31ad9ff33e5a1c3c4b90ec65e9a0b03",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/golang/glog",
 			"repository": "https://github.com/golang/glog",
 			"revision": "23def4e6c14b4da8ac2ed8007337bc5eb5007998",
