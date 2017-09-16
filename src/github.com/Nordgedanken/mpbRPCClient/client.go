@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
-
 	pb "github.com/Nordgedanken/MatrixProtoBuf/matrixProtos"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"log"
 )
 
 const (
@@ -19,12 +18,25 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewLoginServiceClient(conn)
+	lc := pb.NewLoginServiceClient(conn)
 
 	// Contact the server and print out its response.
-	r, err := c.Login(context.Background(), &pb.LoginRequest{"m.password", "test", "", "", ""})
+	lr, err := lc.Login(context.Background(), &pb.LoginRequest{"m.password", "test", "", "", ""})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Greeting: %s", r.String())
+	log.Printf("Greeting: %s", lr.String())
+
+	vc := pb.NewVersionsServiceClient(conn)
+
+	// Contact the server and print out its response.
+	vr, err := vc.Versions(context.Background(), &pb.VersionRequest{Address: "matrix.org"})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+	log.Println("Versions:")
+	for _, k := range vr.Versions {
+		log.Println(k.Version)
+	}
 }

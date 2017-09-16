@@ -13,7 +13,11 @@ import (
 )
 
 func StartProtoServer() {
-	log.Println("Started ProtoBuf Server")
+	log.Println("Started ProtoBuf Proxy")
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusBadRequest)
+	})
 
 	http.HandleFunc("/versions", func(w http.ResponseWriter, r *http.Request) {
 		var versionRequest pb.VersionRequest
@@ -36,14 +40,11 @@ func StartProtoServer() {
 			fmt.Println(err)
 		}
 
-		fmt.Println(hsVersions)
-
 		resp := &pb.VersionsResponse{
 			Versions: []*pb.Version{},
 		}
 
 		for _, k := range hsVersions.Versions {
-			fmt.Println(k)
 			resp.Versions = append(resp.Versions, &pb.Version{Version: k})
 		}
 
