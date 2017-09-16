@@ -1,0 +1,31 @@
+syntax = "proto3";
+package matrixProtos;
+
+message VersionsResponse {
+    repeated Version versions = 1;
+}
+
+message Version {
+    string version = 1;
+}
+
+service LoginService {
+    rpc Login (LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest {
+    string type = 1;
+    string user = 2;
+    string password = 3;
+    string medium = 4;
+    string address = 5;
+}
+
+message LoginResponse {
+    string access_token = 1;
+    string home_server = 2;
+    string user_id = 3;
+    string refresh_token = 4;
+    string errcode = 5;
+    string error = 6;
+}
