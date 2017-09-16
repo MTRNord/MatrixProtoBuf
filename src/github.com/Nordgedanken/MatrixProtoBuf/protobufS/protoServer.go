@@ -1,9 +1,12 @@
 package protobufS
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/Nordgedanken/MatrixProtoBuf/jsonTypes"
 	pb "github.com/Nordgedanken/MatrixProtoBuf/matrixProtos"
 	"github.com/golang/protobuf/proto"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -13,13 +16,37 @@ func StartProtoServer() {
 	log.Println("Started ProtoBuf Server")
 
 	http.HandleFunc("/versions", func(w http.ResponseWriter, r *http.Request) {
-		resp := &pb.VersionsResponse{
-			Versions: []*pb.Version{
-				{"r0.0.1"},
-				{"r0.1.0"},
-				{"r0.2.0"},
-			},
+		var versionRequest pb.VersionRequest
+		var hsVersions jsonTypes.HSVersions
+
+		req, err := ioutil.ReadAll(r.Body)
+
+		if err := proto.Unmarshal(req, &versionRequest); err != nil {
+			fmt.Println(err)
 		}
+
+		reqresp, err := http.Get("https://" + versionRequest.Address + "/_matrix/client/versions")
+		if err != nil {
+			panic(err)
+		}
+		defer reqresp.Body.Close()
+		body, err := ioutil.ReadAll(reqresp.Body)
+
+		if err = json.Unmarshal(body, &hsVersions); err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println(hsVersions)
+
+		resp := &pb.VersionsResponse{
+			Versions: []*pb.Version{},
+		}
+
+		for _, k := range hsVersions.Versions {
+			fmt.Println(k)
+			resp.Versions = append(resp.Versions, &pb.Version{Version: k})
+		}
+
 		out, err := proto.Marshal(resp)
 		checkError(err)
 

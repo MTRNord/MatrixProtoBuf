@@ -1,12 +1,20 @@
 syntax = "proto3";
 package matrixProtos;
 
+service VersioService {
+    rpc Versions (VersionRequest) returns (VersionsResponse);
+}
+
 message VersionsResponse {
     repeated Version versions = 1;
 }
 
 message Version {
     string version = 1;
+}
+
+message VersionRequest {
+    string address = 1;
 }
 
 service LoginService {

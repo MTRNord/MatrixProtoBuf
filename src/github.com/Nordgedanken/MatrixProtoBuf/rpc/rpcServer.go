@@ -13,11 +13,11 @@ const (
 	port = ":50051"
 )
 
-// server is used to implement helloworld.GreeterServer.
-type server struct{}
+// server is used to implement helloworld.LoginServiceServer.
+type loginServ struct{}
 
-// SayHello implements helloworld.GreeterServer
-func (s *server) Login(_ context.Context, r *pb.LoginRequest) (*pb.LoginResponse, error) {
+// Login implements helloworld.LoginServiceServer
+func (s *loginServ) Login(_ context.Context, r *pb.LoginRequest) (*pb.LoginResponse, error) {
 	return &pb.LoginResponse{"test", "localhost", r.User, "test", "", ""}, nil
 }
 
@@ -28,7 +28,7 @@ func StartRPCServer() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterLoginServiceServer(s, &server{})
+	pb.RegisterLoginServiceServer(s, &loginServ{})
 	// Register reflection service on gRPC server.
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
