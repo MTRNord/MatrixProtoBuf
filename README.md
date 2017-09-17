@@ -16,6 +16,7 @@ Join the discussion about this and help making decisions in [#MatrixProtoBuf:mat
 ## How and what to run?
 
 To run only the Proxy which provides the access to the gRPC Server and HTTP Protobuf Server just run the MatrixProtoBuf* file in `bin`.
+The Proxy currently listens on port `50051` fo gRPC and on `3000` for Protobuf over HTTP
 
 ## Where is the Protobuf definition?
 
