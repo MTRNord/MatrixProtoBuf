@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Nordgedanken/MatrixProtoBuf/jsonTypes"
+	"github.com/Nordgedanken/MatrixProtoBuf/matrix/noAuth"
 	pb "github.com/Nordgedanken/MatrixProtoBuf/matrixProtos"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -23,7 +24,16 @@ type loginServ struct{}
 
 // Login implements pb.VersionsServiceServer
 func (s *loginServ) Login(_ context.Context, r *pb.LoginRequest) (*pb.LoginResponse, error) {
-	return &pb.LoginResponse{"test", "localhost", r.User, "test", "", ""}, nil
+	var hsLoginResp jsonTypes.RespLogin
+	hsLoginReq := jsonTypes.ReqLogin{
+		Type:     r.Type,
+		User:     r.User,
+		Password: r.Password,
+	}
+
+	noAuth.Login(r.Address, &hsLoginReq, &hsLoginResp)
+
+	return &pb.LoginResponse{AccessToken: hsLoginResp.AccessToken, HomeServer: hsLoginResp.HomeServer, UserId: hsLoginResp.UserID, RefreshToken: hsLoginResp.RefreshToken}, nil
 }
 
 // server is used to implement pb.LoginServiceServer.

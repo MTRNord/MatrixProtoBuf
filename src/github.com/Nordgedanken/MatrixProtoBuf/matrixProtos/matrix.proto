@@ -34,6 +34,9 @@ message LoginResponse {
     string home_server = 2;
     string user_id = 3;
     string refresh_token = 4;
-    string errcode = 5;
-    string error = 6;
+}
+
+message LoginError {
+    string errcode = 1;
+    string error = 2;
 }
